@@ -1,34 +1,111 @@
-# --- System ---
+# --- Explicit Workspace Exclusions ---
+Creative web dev test (assets and skill)/
+temp/
+tmp/
+
+# --- Operating System & Filesystem ---
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
 Thumbs.db
-*.log
+Thumbs.db:encryptable
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
 
-# --- CreativeOS ---
+# --- CreativeOS & Backups ---
 .project_meta.json
-*_old
-*_backup
+*_old/
+*_backup/
+*.bak
+*.old
+*.orig
+*.tmp
+*.temp
 
-# --- Python / AI ---
+# --- Environment Variables, Secrets & Keys ---
+.env
+.env.*
+.env*.local
+!.env.example
+!.env.template
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+*.pkcs12
+*.secret
+*.token
+credentials.json
+
+# --- Node / Web / Frameworks ---
+node_modules/
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+.astro/
+.remix/
+.cache/
+.parcel-cache/
+.turbo/
+.vercel/
+.netlify/
+coverage/
+.nyc_output/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+*.tsbuildinfo
+*.eslintcache
+
+# --- Logs & Runtime Debugging ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Python / AI / Machine Learning ---
 __pycache__/
 *.py[cod]
 *$py.class
 venv/
 .venv/
-.env
+env/
+ENV/
 *.pkl
 *.pth
+*.pt
+*.onnx
 *.safetensors
+*.bin
+*.ckpt
+*.h5
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+*.ipynb_checkpoints/
 
-# --- Node / Web ---
-node_modules/
-dist/
-build/
-.next/
-coverage/
-.npm
-*.log
-
-# --- IDEs ---
+# --- IDEs & Code Editors ---
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
