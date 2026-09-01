@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+:root {
+  --forest-deep: #081008;
+  --forest-pine: #0e1a0d;
+  --forest-shadow: #16260f;
+  --bark: #4a3728;
+  --mist: #e8e4dc;
+  --mist-dim: #b9b6aa;
+  --amber: #d4953b;
+  --amber-soft: #e8c37f;
+  --moonlight: #b8c4d0;
+  --moss: #5c6b3a;
+}
+
+@theme inline {
+  --color-background: var(--forest-deep);
+  --color-foreground: var(--mist);
+  --font-sans: var(--font-fraunces);
+  --font-display: var(--font-fraunces);
+  --font-serif: var(--font-fraunces);
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  background: var(--forest-deep);
+  color: var(--mist);
+  font-family: var(--font-fraunces), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--forest-deep);
+}
+
+/* ---------- Story overlay text ---------- */
+
+.story-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  perspective: 1200px;
+}
+
+.story-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  padding: 2rem 6vw;
+  transform: translateZ(0) translateY(0);
+}
+
+.eyebrow {
+  font-family: var(--font-sans), Georgia, serif;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-size: 0.72rem;
+  color: var(--amber-soft);
+  margin-bottom: 1.4rem;
+  opacity: 0;
+}
+
+.title {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.4rem, 8vw, 6.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--mist);
+  opacity: 0;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.title.light {
+  color: var(--mist);
+}
+
+.title .accent {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber-soft);
+}
+
+.subtitle {
+  font-family: var(--font-sans), Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  line-height: 1.7;
+  max-width: 34rem;
+  color: var(--mist-dim);
+  margin-top: 1.6rem;
+  opacity: 0;
+}
+
+.meta {
+  font-family: var(--font-sans), Georgia, serif;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  color: var(--moonlight);
+  opacity: 0.7;
+  margin-top: 2.2rem;
+  opacity: 0;
+}
+
+/* ---------- HUD (persistent chrome) ---------- */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+.hud-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem clamp(1.2rem, 4vw, 3.5rem);
+  font-family: var(--font-sans), Georgia, serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+}
+
+.hud-wordmark {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.hud-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(232, 228, 220, 0.06);
+}
+
+.hud-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--amber), var(--amber-soft));
+  transform-origin: left;
+}
+
+.hud-scrollhint {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans), Georgia, serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+  animation: hint-bob 3s ease-in-out infinite;
+}
+
+.hud-scrollhint::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 34px;
+  margin: 0.9rem auto 0;
+  background: linear-gradient(var(--amber), transparent);
+}
+
+@keyframes hint-bob {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ---------- Grain overlay ---------- */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ---------- Scroll stage ---------- */
+
+.scroll-stage {
+  position: relative;
+  width: 100%;
+  height: 900vh;
+  z-index: 1;
+}
+
+.no-scroll-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  font-family: var(--font-sans), Georgia, serif;
+  color: var(--mist);
+  background: var(--forest-deep);
+}
