@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0B0F0D;
+  --canopy: #1A241E;
+  --moss: #3A4A3B;
+  --mist: #D6DDD6;
+  --chalk: #EDE8DE;
+  --bark: #2B211E;
+  --ember: #C86432;
+  --sage: #8A9A8B;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-canopy: var(--canopy);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar { display: none; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* utility */
+.font-serif { font-family: var(--font-serif); }
+.font-sans { font-family: var(--font-sans); }
+.font-mono { font-family: var(--font-mono); }
