@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --moss: #0D1A14;
+  --moss-soft: #14261E;
+  --chalk: #E8E6DE;
+  --chalk-muted: #CFC9B8;
+  --bark: #2B2117;
+  --lichen: #8A9B6E;
+  --lichen-bright: #A8C090;
+  --ember: #C96A2B;
+  --ember-hover: #DB7B3D;
+  --mist: #9BB5C2;
+  --fog: #D6E0E3;
+  --cream: #F5F1E8;
+}
+
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
+html {
+  background: var(--moss);
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--moss);
+  color: var(--chalk);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Typography masks */
+.line-mask { overflow: hidden; display: block; }
+.char { display: inline-block; will-change: transform; }
+.split-line { overflow: hidden; }
+
+/* Hide scroll markers in prod */
+.gsap-marker { display: none !important; }
