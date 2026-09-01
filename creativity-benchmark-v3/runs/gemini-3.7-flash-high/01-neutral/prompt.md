@@ -1,0 +1,1 @@
+I need a website for a small neighborhood laundromat. I don't know much about websites or design. Please come up with a plan for what it should be like. Don't build it yet; I want to examine your plan first.
