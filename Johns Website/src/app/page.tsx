@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { HeroScrollController } from "@/components/hero/HeroScrollController";
 import {
   Annotation,
   ArtifactFrame,
@@ -34,13 +35,8 @@ function ColorControl() {
 export default function Home() {
   return (
     <main id="top">
-      {process.env.NODE_ENV === "development" && (
-        <label className="proof-debug-toggle">
-          <input id="proof-debug" type="checkbox" />
-          <span>GRID / DEBUG</span>
-        </label>
-      )}
-      <section className="proof-page hero" aria-labelledby="hero-title">
+      <HeroScrollController />
+      <section className="proof-page hero" aria-labelledby="hero-title" data-hero data-narrative-state="REST">
         <ProofCorners />
         <Header />
         <GuideLine className="hero-baseline" />
@@ -51,6 +47,12 @@ export default function Home() {
         <SystemLabel className="side-code">MARGIN / 1680 × 960 — PROOF 01<br />SRGB IEC61966-2.1</SystemLabel>
         <Annotation className="hero-note-left">kerning<br />optical<br />+10</Annotation>
         <HandArrow className="hero-arrow-left" />
+        <aside className="hero-modes" aria-labelledby="modes-title">
+          <h2 id="modes-title" className="sr-only">John&apos;s creative modes</h2>
+          <ul>
+            {['BUILDER', 'DIRECTOR', 'ENGINEER', 'DESIGNER', 'MUSICIAN', 'EXPERIMENTER', 'TEACHER'].map((mode) => <li key={mode}>{mode}</li>)}
+          </ul>
+        </aside>
         <div className="hero-word-wrap">
           <span className="hero-registration" aria-hidden="true"><span>JO</span><span>HN</span></span>
           <span className="hero-ink-impression" aria-hidden="true"><span>JO</span><span>HN</span></span>
@@ -64,14 +66,17 @@ export default function Home() {
         <SystemLabel className="hero-density-label">INK / 095<br />PAPER / WARM 01</SystemLabel>
         <div className="hero-copy">
           <p>I make things <u>across</u> software, film, AI, design and sound.</p>
-          <SystemLabel>CURRENT MODE / <span className="proof-underline">EVERYTHING</span></SystemLabel>
+          <SystemLabel className="mode-status">
+            <span className="mode-status-current">CURRENT MODE / <span className="proof-underline">EVERYTHING</span></span>
+            <span className="mode-status-detected">MODES DETECTED / <span className="proof-underline">07</span></span>
+          </SystemLabel>
         </div>
         <a className="scroll-prompt" href="#work">SCROLL TO ENTER ↓</a>
         <ColorControl />
         <SystemLabel className="version">VER. 0.1<br />05 / 20 / 26</SystemLabel>
         <RevisionStamp revision="rev A">PROOF 01</RevisionStamp>
         <RegistrationMark className="hero-registration-bottom" />
-        <SystemLabel className="hero-folio">SHEET 01 / 03&nbsp;&nbsp; OUTPUT / STATIC PROOF</SystemLabel>
+        <SystemLabel className="hero-folio">SHEET 01 / 03&nbsp;&nbsp; OUTPUT / SCROLL PROOF</SystemLabel>
       </section>
 
       <section id="work" className="proof-page selected-work" aria-labelledby="work-title">

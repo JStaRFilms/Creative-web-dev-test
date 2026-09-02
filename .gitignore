@@ -108,4 +108,18 @@ htmlcov/
 *.swo
 *~
 *.sublime-project
-*.sublime-workspace
+*.sublime-workspace
+
+# --- Media & Video Formats ---
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.wmv
+*.flv
+*.m4v
+*.mpeg
+*.mpg
+*.ogv
+

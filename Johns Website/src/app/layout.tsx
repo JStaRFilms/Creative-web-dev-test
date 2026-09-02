@@ -8,6 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "JOHN — Creative Technologist",
   description: "John Oluleke-Oke makes things across software, film, AI, design and sound.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
