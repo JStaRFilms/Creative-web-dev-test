@@ -58,9 +58,26 @@ export function ArtifactFrame({ children, label, className = "" }: { children: R
   );
 }
 
+export function DensityWedge({ className = "" }: { className?: string }) {
+  return (
+    <div className={`density-wedge ${className}`} aria-hidden="true">
+      <span /><span /><span /><span /><span />
+    </div>
+  );
+}
+
+export function DimensionLine({ label, className = "" }: { label: string; className?: string }) {
+  return <span className={`dimension-line ${className}`} aria-hidden="true"><i />{label}<i /></span>;
+}
+
+export function ProofGrid() {
+  return <div className="proof-grid" aria-hidden="true" />;
+}
+
 export function ProofCorners() {
   return (
     <>
+      <ProofGrid />
       <CropMark position="top-left" />
       <CropMark position="top-right" />
       <CropMark position="bottom-left" />
