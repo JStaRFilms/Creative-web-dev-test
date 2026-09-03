@@ -46,11 +46,11 @@ console.log("✓ Captured 01-clean-disturbance-0.png");
 await page.evaluate(() => {
   window.__INK_LAB__?.setParams({
     disturbance: 0.30,
-    registration: 0.35,
+    registration: 0.32,
     drag: 0.25,
-    dragAngle: 15,
+    dragAngle: 18,
     roughness: 0.22,
-    reveal: 0.18,
+    reveal: 0.20,
     pointerActive: false,
     renderMode: "paper",
   });
@@ -63,11 +63,11 @@ console.log("✓ Captured 02-mild-disturbance.png");
 await page.evaluate(() => {
   window.__INK_LAB__?.setParams({
     disturbance: 0.60,
-    registration: 0.65,
-    drag: 0.55,
-    dragAngle: 25,
-    roughness: 0.48,
-    reveal: 0.55,
+    registration: 0.58,
+    drag: 0.48,
+    dragAngle: 24,
+    roughness: 0.42,
+    reveal: 0.48,
     pointerActive: false,
     renderMode: "paper",
   });
@@ -76,15 +76,15 @@ await page.waitForTimeout(500);
 await page.screenshot({ path: "screenshots/milestone-02b/03-medium-disturbance.png" });
 console.log("✓ Captured 03-medium-disturbance.png");
 
-// Tier 4: Maximum Acceptable Disturbance (~0.90)
+// Tier 4: Maximum Acceptable Disturbance (~0.85)
 await page.evaluate(() => {
   window.__INK_LAB__?.setParams({
-    disturbance: 0.90,
-    registration: 0.88,
-    drag: 0.82,
-    dragAngle: 35,
-    roughness: 0.70,
-    reveal: 0.85,
+    disturbance: 0.85,
+    registration: 0.78,
+    drag: 0.68,
+    dragAngle: 28,
+    roughness: 0.58,
+    reveal: 0.72,
     pointerActive: false,
     renderMode: "paper",
   });

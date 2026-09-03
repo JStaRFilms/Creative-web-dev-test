@@ -38,14 +38,25 @@ interface InkCanvasProps {
   isStackedLayout?: boolean;
 }
 
-const MODES = [
-  "BUILDER",
-  "DIRECTOR",
-  "ENGINEER",
-  "DESIGNER",
-  "MUSICIAN",
-  "EXPERIMENTER",
-  "TEACHER",
+// Distributed under-print layout across the span of JOHN
+const SINGLE_LINE_MODES = [
+  { text: "BUILDER", x: 0.28, y: 0.44 },
+  { text: "DIRECTOR", x: 0.42, y: 0.42 },
+  { text: "ENGINEER", x: 0.58, y: 0.44 },
+  { text: "DESIGNER", x: 0.72, y: 0.42 },
+  { text: "MUSICIAN", x: 0.35, y: 0.57 },
+  { text: "EXPERIMENTER", x: 0.50, y: 0.58 },
+  { text: "TEACHER", x: 0.65, y: 0.57 },
+];
+
+const STACKED_MODES = [
+  { text: "BUILDER", x: 0.34, y: 0.26 },
+  { text: "DIRECTOR", x: 0.48, y: 0.23 },
+  { text: "MUSICIAN", x: 0.48, y: 0.32 },
+  { text: "ENGINEER", x: 0.54, y: 0.66 },
+  { text: "DESIGNER", x: 0.54, y: 0.74 },
+  { text: "EXPERIMENTER", x: 0.68, y: 0.66 },
+  { text: "TEACHER", x: 0.68, y: 0.74 },
 ];
 
 function createShader(gl: WebGL2RenderingContext, type: number, source: string): WebGLShader | null {
@@ -113,7 +124,7 @@ export function InkCanvas({
         : Math.min(width * 0.29, height * 0.85);
 
       const serifFont = `400 ${baseFontSize}px "Instrument Serif", Georgia, serif`;
-      const monoFont = `500 ${Math.max(13, baseFontSize * 0.048)}px "IBM Plex Mono", monospace`;
+      const monoFont = `500 ${Math.max(12, Math.round(baseFontSize * 0.052))}px "IBM Plex Mono", monospace`;
 
       ctx.save();
       // Apply slight scaleX compression matching production design
@@ -150,19 +161,16 @@ export function InkCanvas({
 
       ctx.restore();
 
-      // 3. Blue Channel = Hidden Operating Modes
+      // 3. Blue Channel = Distributed Under-Print Modes
       ctx.fillStyle = "rgb(0, 0, 255)";
       ctx.font = monoFont;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.letterSpacing = "0.055em";
-      const modeLineHeight = Math.max(17, baseFontSize * 0.065);
-      const totalModesHeight = (MODES.length - 1) * modeLineHeight;
-      const modeStartY = height * 0.5 - totalModesHeight * 0.5;
+      ctx.letterSpacing = "0.065em";
 
-      MODES.forEach((mode, idx) => {
-        const y = modeStartY + idx * modeLineHeight;
-        ctx.fillText(mode, width * 0.5, y);
+      const modesList = stacked ? STACKED_MODES : SINGLE_LINE_MODES;
+      modesList.forEach((mode) => {
+        ctx.fillText(mode.text, width * mode.x, height * mode.y);
       });
 
       ctx.globalCompositeOperation = "source-over";
