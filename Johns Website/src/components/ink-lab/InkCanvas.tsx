@@ -38,25 +38,25 @@ interface InkCanvasProps {
   isStackedLayout?: boolean;
 }
 
-// Distributed under-print layout across the span of JOHN
+// Distributed under-print layout positioned directly within glyph footprints
 const SINGLE_LINE_MODES = [
-  { text: "BUILDER", x: 0.28, y: 0.44 },
-  { text: "DIRECTOR", x: 0.42, y: 0.42 },
-  { text: "ENGINEER", x: 0.58, y: 0.44 },
+  { text: "BUILDER", x: 0.27, y: 0.46 },
+  { text: "DIRECTOR", x: 0.42, y: 0.48 },
+  { text: "ENGINEER", x: 0.58, y: 0.46 },
+  { text: "MUSICIAN", x: 0.58, y: 0.56 },
   { text: "DESIGNER", x: 0.72, y: 0.42 },
-  { text: "MUSICIAN", x: 0.35, y: 0.57 },
-  { text: "EXPERIMENTER", x: 0.50, y: 0.58 },
-  { text: "TEACHER", x: 0.65, y: 0.57 },
+  { text: "EXPERIMENTER", x: 0.72, y: 0.52 },
+  { text: "TEACHER", x: 0.72, y: 0.62 },
 ];
 
 const STACKED_MODES = [
-  { text: "BUILDER", x: 0.34, y: 0.26 },
-  { text: "DIRECTOR", x: 0.48, y: 0.23 },
-  { text: "MUSICIAN", x: 0.48, y: 0.32 },
-  { text: "ENGINEER", x: 0.54, y: 0.66 },
-  { text: "DESIGNER", x: 0.54, y: 0.74 },
-  { text: "EXPERIMENTER", x: 0.68, y: 0.66 },
-  { text: "TEACHER", x: 0.68, y: 0.74 },
+  { text: "BUILDER", x: 0.38, y: 0.30 },
+  { text: "DIRECTOR", x: 0.52, y: 0.26 },
+  { text: "MUSICIAN", x: 0.52, y: 0.35 },
+  { text: "ENGINEER", x: 0.48, y: 0.66 },
+  { text: "DESIGNER", x: 0.48, y: 0.74 },
+  { text: "EXPERIMENTER", x: 0.64, y: 0.66 },
+  { text: "TEACHER", x: 0.64, y: 0.74 },
 ];
 
 function createShader(gl: WebGL2RenderingContext, type: number, source: string): WebGLShader | null {

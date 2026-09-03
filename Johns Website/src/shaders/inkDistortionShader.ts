@@ -87,7 +87,7 @@ void main() {
   vec4 colorPaper = vec4(0.9451, 0.9216, 0.8667, 1.0);     // #F1EBDD
   vec4 colorInk = vec4(0.0902, 0.0902, 0.0784, 1.0);       // #171714
   vec4 colorProofRed = vec4(0.8510, 0.3569, 0.2471, 1.0);  // #D95B3F
-  vec4 colorModeText = vec4(0.7882, 0.3098, 0.2118, 1.0);  // #C94F36
+  vec4 colorModeText = vec4(0.8510, 0.3569, 0.2471, 1.0);  // #D95B3F (authentic proof red)
   
   // 1. Local Pointer Disturbance Field
   vec2 ptrDelta = (v_uv - u_pointer) * vec2(u_aspect, 1.0);
@@ -145,39 +145,40 @@ void main() {
   
   // 5. Directional but Locally Inconsistent Drag (Pulled-away material ~20%)
   // Drag length varies across stems and serifs based on local roller variation
-  float localDragFactor = mix(0.35, 1.25, localRollerVariation);
-  float maxDragDist = (u_drag * effectiveDisturbance * 0.062 * localDragFactor) + (ptrInfluence * (0.01 + u_speed * 0.042));
+  float localDragFactor = mix(0.40, 1.25, localRollerVariation);
+  float maxDragDist = (u_drag * effectiveDisturbance * 0.058 * localDragFactor) + (ptrInfluence * (0.01 + u_speed * 0.040));
   
   float trailAccum = 0.0;
   float trailWeight = 0.0;
-  const int SAMPLES = 12;
+  const int SAMPLES = 14;
   
-  // Sample along drag vector with non-periodic jitter to eliminate step lines
+  // Sample along drag vector with non-periodic jitter and quadratic tail taper (no slice edges)
   for (int i = 1; i <= SAMPLES; i++) {
     float frac = float(i) / float(SAMPLES);
-    float jitter = (hash11(float(i) * 23.7 + perpCoord * 43.0) - 0.5) * 0.07;
-    float t = clamp(frac + jitter, 0.0, 1.0);
+    float jitter = (hash11(float(i) * 31.17 + perpCoord * 57.3) - 0.5) * 0.06;
+    float t = clamp(frac + jitter, 0.001, 1.0);
     
-    // Natural exponential decay of dragged ink
-    float w = exp(-t * 3.2);
+    // Smooth quadratic envelope guarantees zero blunt rectangular edge at tail
+    float tailEnvelope = (1.0 - t) * (1.0 - t);
+    float w = exp(-t * 2.8) * tailEnvelope;
+    
     vec2 sampleUV = clamp(baseUV - dragDir * (t * maxDragDist), 0.0, 1.0);
     float s = texture(u_tex, sampleUV).r;
     
     // Fine natural micro-fiber variation in dragged trail
-    float fiberGrain = mix(0.72, 1.0, noise1D(dot(sampleUV * vec2(u_aspect, 1.0), perpDir) * 140.0));
+    float fiberGrain = mix(0.75, 1.0, noise1D(dot(sampleUV * vec2(u_aspect, 1.0), perpDir) * 160.0));
     trailAccum += s * w * fiberGrain;
     trailWeight += w;
   }
   
   float trailDensity = (trailAccum / max(0.001, trailWeight));
   // Smeared material pulled off glyphs onto paper (subordinate to core)
-  float draggedMaterial = trailDensity * (0.32 + 0.42 * effectiveDisturbance);
+  float draggedMaterial = trailDensity * (0.28 + 0.38 * effectiveDisturbance);
   
   // Final Primary Ink: Core remains prominent, trails extend outward
   float finalPrimaryInk = max(intactCore, draggedMaterial);
   
   // 6. Mechanically Imperfect Proof-Red Registration Layer
-  // Spatial variation across platen width: skew angle and tension drift
   float regStrength = u_registration * effectiveDisturbance + ptrInfluence * (0.22 + u_speed * 0.32);
   
   vec2 centeredUV = v_uv - vec2(0.5);
@@ -204,20 +205,41 @@ void main() {
   float ghostInkSample = texture(u_tex, ghostUV).r;
   float ghostDensity = ghostInkSample * (0.14 * effectiveDisturbance + 0.20 * ptrInfluence);
   
-  // 8. Distributed Under-Print Mode Reveal
-  // Under-print text is exposed where primary ink is displaced, thinned, or in mechanical gaps
-  float rawReveal = u_reveal * (0.4 + 0.6 * effectiveDisturbance) + ptrInfluence * 0.35;
+  // 8. Corrected Under-Print Mode Reveal Model
+  // Concealment footprint: the original undisturbed ink footprint of JOHN
+  float origFootprint = texture(u_tex, v_uv).r;
+  
+  // Softened footprint envelope (dilated by ~4px in texture space)
+  vec2 texel = 1.0 / u_resolution;
+  float fpN = texture(u_tex, v_uv + vec2(0.0, texel.y * 4.0)).r;
+  float fpS = texture(u_tex, v_uv - vec2(0.0, texel.y * 4.0)).r;
+  float fpE = texture(u_tex, v_uv + vec2(texel.x * 4.0, 0.0)).r;
+  float fpW = texture(u_tex, v_uv - vec2(texel.x * 4.0, 0.0)).r;
+  float dilatedFootprint = max(origFootprint, max(max(fpN, fpS), max(fpE, fpW)));
+  float footprintMask = smoothstep(0.02, 0.25, dilatedFootprint);
+  
+  // Sample under-print mode layer
   vec2 modeUV = clamp(v_uv + plateWarp * 0.25, 0.0, 1.0);
   float modeSample = texture(u_tex, modeUV).b;
   
-  // Reveal appears through gaps (~10% exposure) and trailing smear voids
-  float voidExposure = clamp(1.0 - finalPrimaryInk * 0.88, 0.0, 1.0);
-  float finalModeReveal = clamp(modeSample * rawReveal * (0.55 + 0.45 * voidExposure) * 1.5, 0.0, 1.0);
+  // Core Exposure Law:
+  // EXPOSED AREA ≈ ORIGINAL INK COVERAGE - CURRENT PRIMARY INK COVERAGE
+  float inkRemoved = clamp(origFootprint - intactCore, 0.0, 1.0);
+  float inkThinning = clamp(1.0 - intactCore, 0.0, 1.0) * origFootprint;
   
-  // 9. Layer Composition
+  // Faint ghost presence at high reveal values (max ~0.15 opacity), strictly inside the glyph footprint
+  float faintGhostInside = footprintMask * 0.15 * u_reveal * effectiveDisturbance;
+  
+  // Total exposure factor: strictly 0 on blank paper outside glyph footprint
+  float exposureFactor = clamp(inkRemoved * 2.2 + inkThinning * 1.2 + faintGhostInside, 0.0, 1.0);
+  
+  // Final revealed mode alpha: strictly zero on blank paper, visible where ink was removed/disturbed
+  float finalModeReveal = clamp(modeSample * footprintMask * exposureFactor * u_reveal * 1.6, 0.0, 1.0);
+  
+  // 9. Physical Layer Composition
   vec4 result = (u_renderMode == 1) ? colorPaper : vec4(0.0);
   
-  // A. Under-print revealed modes
+  // A. Under-print layer laid down first on paper (uncovered as top ink is disturbed)
   if (finalModeReveal > 0.002) {
     vec4 modeColor = vec4(colorModeText.rgb, finalModeReveal);
     result = mix(result, modeColor, modeColor.a);
@@ -235,9 +257,11 @@ void main() {
     result = mix(result, ghostColor, ghostColor.a);
   }
   
-  // D. Primary black impression (solid core + pulled material)
+  // D. Primary black impression (solid core covers under-print; displaced/eroded areas reveal it)
   if (finalPrimaryInk > 0.002) {
-    vec4 inkColor = vec4(colorInk.rgb, finalPrimaryInk);
+    // In areas where under-print is strongly exposed, primary ink has lower opacity to let red shine through
+    float effectiveInkAlpha = finalPrimaryInk * (1.0 - finalModeReveal * 0.55);
+    vec4 inkColor = vec4(colorInk.rgb, effectiveInkAlpha);
     result = mix(result, inkColor, inkColor.a);
   }
   
