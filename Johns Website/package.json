@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "screenshots": "node scripts/capture.mjs",
-    "capture:milestone-02a": "node scripts/capture-milestone-02a.mjs"
+    "capture:milestone-02a": "node scripts/capture-milestone-02a.mjs",
+    "capture:milestone-02b": "node scripts/capture-milestone-02b.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.1.1",
