@@ -33,6 +33,8 @@ $RECYCLE.BIN/
 .env*.local
 !.env.example
 !.env.template
+!.env.sample
+!.env.*.example
 *.pem
 *.key
 *.cert
@@ -66,16 +68,38 @@ coverage/
 .pnpm-store/
 .yarn/cache/
 .yarn/unplugged/
+.yarn/install-state.gz
+.pnp
+.pnp.*
 *.tsbuildinfo
 *.eslintcache
 
+# --- Testing & Browser Automation ---
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+.*-frames/
+*-frames/
+
 # --- Logs & Runtime Debugging ---
 *.log
+.*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.pnpm-debug.log*
 lerna-debug.log*
+*.pid
+.*.pid
+*.seed
+*.pid.lock
+
+# --- Diagnostic & Audit Dumps ---
+.*audit*.json
+*-audit.json
+npm-audit*.json
 
 # --- Python / AI / Machine Learning ---
 __pycache__/
