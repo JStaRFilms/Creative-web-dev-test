@@ -5,6 +5,7 @@ export interface PointerPhysicsState {
   vy: number;
   speed: number;
   active: boolean;
+  influence: number;
   rawX: number;
   rawY: number;
 }
@@ -21,9 +22,16 @@ export class PointerTracker {
   private posX = 0.5;
   private posY = 0.5;
   private isActive = false;
+  private influence = 0;
+  private targetInfluence = 0;
+  private lastMoveTime = 0;
   private hasMoved = false;
 
   public update(now: number, dampening = 0.88): PointerPhysicsState {
+    if (now - this.lastMoveTime > 70) this.targetInfluence = 0;
+    this.influence += (this.targetInfluence - this.influence) * (this.targetInfluence > this.influence ? 0.24 : 0.075);
+    if (!this.isActive && this.influence < 0.002) this.influence = 0;
+
     this.currentVx = this.currentVx * dampening + this.targetVx * (1 - dampening);
     this.currentVy = this.currentVy * dampening + this.targetVy * (1 - dampening);
     this.targetVx *= dampening;
@@ -38,7 +46,8 @@ export class PointerTracker {
       vx: this.currentVx,
       vy: this.currentVy,
       speed: Math.min(this.currentSpeed * 12, 1),
-      active: this.isActive,
+      active: this.isActive || this.influence > 0,
+      influence: this.influence,
       rawX: this.lastX,
       rawY: this.lastY,
     };
@@ -56,6 +65,8 @@ export class PointerTracker {
       this.posY = uvY;
       this.hasMoved = true;
       this.isActive = true;
+      this.lastMoveTime = now;
+      this.targetInfluence = 0.12;
       return;
     }
 
@@ -65,6 +76,9 @@ export class PointerTracker {
 
     this.targetVx = Math.max(-2, Math.min(2, dx / dt));
     this.targetVy = Math.max(-2, Math.min(2, dy / dt));
+    const speed = Math.hypot(this.targetVx, this.targetVy);
+    this.targetInfluence = Math.min(1, 0.1 + speed * 0.45);
+    this.lastMoveTime = now;
 
     this.posX = uvX;
     this.posY = uvY;
@@ -82,11 +96,14 @@ export class PointerTracker {
     this.lastX = uvX;
     this.lastY = uvY;
     this.lastTime = performance.now();
+    this.lastMoveTime = this.lastTime;
+    this.targetInfluence = 0;
     this.isActive = true;
   }
 
   public onPointerLeave(): void {
     this.isActive = false;
+    this.targetInfluence = 0;
   }
 
   public reset(): void {
@@ -95,6 +112,8 @@ export class PointerTracker {
     this.currentVx = 0;
     this.currentVy = 0;
     this.currentSpeed = 0;
+    this.influence = 0;
+    this.targetInfluence = 0;
     this.isActive = false;
     this.hasMoved = false;
   }

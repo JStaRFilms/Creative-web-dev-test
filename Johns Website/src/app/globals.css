@@ -72,6 +72,12 @@ body:has(#proof-debug:checked) .proof-page::before { content: "12 COL / 8 PX BAS
 .side-code { position: absolute; left: 1.7vw; top: 18%; writing-mode: vertical-rl; font-size: .58rem; }
 .hero-word-wrap { position: absolute; z-index: 2; top: 23%; left: 15.5%; right: 13.5%; height: 39%; transform-origin: left center; transform: translate(calc(var(--reorganize) * -9vw), calc(var(--reorganize) * 18vh)) scale(calc(1 - var(--reorganize) * .58)); opacity: calc(1 - var(--reorganize) * .48); }
 .hero-word-wrap h1, .hero-registration, .hero-ink-impression { position: absolute; inset: 0; margin: 0; white-space: nowrap; font: 400 clamp(12rem, 28.5vw, 35rem)/.8 var(--serif); letter-spacing: -.065em; transform: scaleX(.93); transform-origin: left center; }
+.hero-ink-canvas { position: absolute; z-index: 4; inset: -7% -4%; width: 108%; height: 114%; display: block; touch-action: pan-y; }
+.hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"]) > h1,
+.hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"]) > .hero-registration,
+.hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"]) > .hero-ink-impression { opacity: 0; }
+.hero:has(.hero-ink-canvas[data-ink-ready="true"]) > .hero-modes { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"])::after { display: none; }
 .hero-word-wrap h1 span, .hero-registration span, .hero-ink-impression span { display: inline; }
 .hero-word-wrap h1 { z-index: 2; color: var(--ink); text-shadow: -.35px .2px rgba(23,23,20,.95), .5px 0 rgba(23,23,20,.72), 0 .65px rgba(23,23,20,.45); filter: contrast(1.08); transform: translate(calc(var(--disturbance) * -2px), calc(var(--disturbance) * 1px)) skewX(calc(var(--disturbance) * -.22deg)) scaleX(.93); clip-path: none; }
 .hero-registration { z-index: 1; color: transparent; -webkit-text-stroke: .75px rgba(217,91,63,.7); transform: translate(calc(2px + var(--disturbance) * 13px), calc(1px - var(--disturbance) * 3px)) scaleX(.93); transform-origin: left center; opacity: calc(.72 + var(--disturbance) * .28); }
@@ -191,6 +197,7 @@ body:has(#proof-debug:checked) .proof-page::before { content: "12 COL / 8 PX BAS
   .hero-baseline { top: 65%; }
   .hero-word-wrap { top: 24%; left: 8vw; right: 8vw; height: 41%; transform: translate(0, calc(var(--reorganize) * 16vh)) scale(calc(1 - var(--reorganize) * .5)); }
   .hero-word-wrap h1, .hero-registration, .hero-ink-impression { white-space: normal; width: 100%; font-size: 40vw; line-height: .72; letter-spacing: -.065em; transform: scaleX(.94); }
+  .hero-ink-canvas { inset: -3% -6%; width: 112%; height: 106%; }
   .hero-word-wrap h1 span, .hero-registration span, .hero-ink-impression span { display: block; }
   .hero-word-wrap h1 span + span, .hero-registration span + span, .hero-ink-impression span + span { margin-left: 17vw; }
   .hero-registration { transform: translate(1.5px, 1px) scaleX(.94); }
@@ -246,6 +253,10 @@ body:has(#proof-debug:checked) .proof-page::before { content: "12 COL / 8 PX BAS
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-ink-canvas { display: none; }
+  .hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"]) > h1 { opacity: 1; }
+  .hero-word-wrap:has(.hero-ink-canvas[data-ink-ready="true"]) > .hero-registration { opacity: calc(.72 + var(--disturbance) * .28); }
+  .hero:has(.hero-ink-canvas[data-ink-ready="true"]) > .hero-modes { position: absolute; width: 27%; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
   .hero-word-wrap h1 { transform: scaleX(.93); clip-path: none; }
   .hero-ink-impression, .hero-word-wrap::after { display: none; }
   .hero-registration { transform: translate(calc(2px + var(--reveal) * 3px), 1px) scaleX(.93); }

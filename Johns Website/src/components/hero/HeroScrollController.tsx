@@ -47,6 +47,7 @@ export function HeroScrollController() {
         }
 
         window.__JOHN_HERO__ = { ...snapshot, start, end };
+        window.dispatchEvent(new CustomEvent("john:hero-progress", { detail: snapshot }));
         setMetric("progress", snapshot.progress.toFixed(3));
         setMetric("state", snapshot.state);
         setMetric("disturbance", snapshot.disturbance.toFixed(3));
@@ -115,6 +116,7 @@ export function HeroScrollController() {
         <span>DISTURB <b data-debug-disturbance>0.000</b></span>
         <span>REVEAL <b data-debug-reveal>0.000</b></span>
         <span>REBUILD <b data-debug-reconstruction>0.000</b></span>
+        <span>RENDERER <b data-debug-renderer>INK / WEBGL2</b></span>
       </div>
     </aside>
   );

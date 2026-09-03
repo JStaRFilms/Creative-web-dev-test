@@ -36,6 +36,7 @@ interface InkCanvasProps {
   onTelemetry?: (telemetry: InkTelemetry) => void;
   className?: string;
   isStackedLayout?: boolean;
+  ariaHidden?: boolean;
 }
 
 // Distributed under-print layout positioned directly within glyph footprints
@@ -96,6 +97,7 @@ export function InkCanvas({
   onTelemetry,
   className = "",
   isStackedLayout = false,
+  ariaHidden = false,
 }: InkCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointerTrackerRef = useRef<PointerTracker>(new PointerTracker());
@@ -191,12 +193,17 @@ export function InkCanvas({
 
     if (!gl) {
       console.error("WebGL2 not supported on this browser.");
+      canvas.dataset.inkReady = "false";
       return;
     }
 
     const program = createProgram(gl, INK_VERTEX_SHADER, INK_FRAGMENT_SHADER);
-    if (!program) return;
+    if (!program) {
+      canvas.dataset.inkReady = "false";
+      return;
+    }
 
+    canvas.dataset.inkReady = "true";
     gl.useProgram(program);
 
     // Screen quad geometry
@@ -314,7 +321,7 @@ export function InkCanvas({
       gl.uniform2f(uPtrLoc, pState.x, pState.y);
       gl.uniform2f(uVelLoc, pState.vx, pState.vy);
       gl.uniform1f(uSpeedLoc, pState.speed);
-      gl.uniform1f(uPtrActiveLoc, pState.active ? pointerEnabled : 0.0);
+      gl.uniform1f(uPtrActiveLoc, pState.influence * pointerEnabled);
       gl.uniform1i(uRenderModeLoc, p.renderMode === "paper" ? 1 : 0);
 
       gl.clearColor(0, 0, 0, 0);
@@ -348,6 +355,7 @@ export function InkCanvas({
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
+      canvas.dataset.inkReady = "false";
       gl.deleteProgram(program);
       gl.deleteShader(createShader(gl, gl.VERTEX_SHADER, INK_VERTEX_SHADER));
       gl.deleteBuffer(positionBuffer);
@@ -375,6 +383,7 @@ export function InkCanvas({
     <canvas
       ref={canvasRef}
       className={`ink-canvas ${className}`}
+      aria-hidden={ariaHidden}
       onPointerMove={handlePointerMove}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}

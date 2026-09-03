@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { HeroInkRenderer } from "@/components/hero/HeroInkRenderer";
 import { HeroScrollController } from "@/components/hero/HeroScrollController";
 import {
   Annotation,
@@ -54,6 +55,7 @@ export default function Home() {
           </ul>
         </aside>
         <div className="hero-word-wrap">
+          <HeroInkRenderer />
           <span className="hero-registration" aria-hidden="true"><span>JO</span><span>HN</span></span>
           <span className="hero-ink-impression" aria-hidden="true"><span>JO</span><span>HN</span></span>
           <h1 id="hero-title"><span>JO</span><span>HN</span></h1>
